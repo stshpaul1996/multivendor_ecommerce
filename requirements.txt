@@ -1,0 +1,7 @@
+asgiref
+Django
+djangorestframework
+psycopg2-binary
+sqlparse
+drf-yasg
+djangorestframework-simplejwt[crypto]
