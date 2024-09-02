@@ -149,10 +149,10 @@ REST_FRAMEWORK = {
 
     # ],
 
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
 
-    'DEFAULT_PAGINATION_CLASS': 'main_app.pagination.CustomPagination',
-    'PAGE_SIZE': 1
+    # 'DEFAULT_PAGINATION_CLASS': 'main_app.pagination.CustomPagination',
+    # 'PAGE_SIZE': 1
 }
