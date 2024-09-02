@@ -5,3 +5,4 @@ psycopg2-binary
 sqlparse
 drf-yasg
 djangorestframework-simplejwt[crypto]
+django-cors-headers
