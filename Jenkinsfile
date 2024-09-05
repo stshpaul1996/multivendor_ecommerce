@@ -22,6 +22,7 @@ pipeline {
         stage('install Dependencies') {
             steps {
                 script {
+                    bat 'venv\\Scripts\\pip install --upgrade setuptools'
                     bat 'venv\\Scripts\\pip install -r requirements.txt' // For Windows
                 }
             }
