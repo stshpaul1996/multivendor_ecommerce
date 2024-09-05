@@ -19,6 +19,13 @@ pipeline {
                 }
             }
         }
+        stage('install Dependencies') {
+            steps {
+                script {
+                    bat 'venv\\Scripts\\pip install -r requirements.txt' // For Windows
+                }
+            }
+        }
         stage('Run Migrations') {
             steps {
                 script {
