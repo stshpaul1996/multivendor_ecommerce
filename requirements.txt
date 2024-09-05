@@ -6,3 +6,4 @@ sqlparse
 drf-yasg
 djangorestframework-simplejwt[crypto]
 django-cors-headers
+pkg_resources
