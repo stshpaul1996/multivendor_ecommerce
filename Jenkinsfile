@@ -1,84 +1,56 @@
 pipeline {
     agent any
-
-    environment {
-        PYTHON_VERSION = '3.9' // Set the Python version you want to use
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'backend', url: 'https://github.com/stshpaul1996/multivendor_ecommerce.git'
             }
         }
-
         stage('Setup Python Environment') {
             steps {
                 script {
                     if (isUnix()) {
-                        sh '''
-                            python3 -m venv venv
-                            . venv/bin/activate
-                            pip install -r requirements.txt
-                        '''
+                        sh 'python3 -m venv venv'
+                        sh 'source venv/bin/activate'
                     } else {
-                        bat '''
-                            python -m venv venv
-                            venv\\Scripts\\activate
-                            pip install -r requirements.txt
-                        '''
+                        bat 'python -m venv venv'
+                        bat 'venv\\Scripts\\activate'
                     }
                 }
             }
         }
-
         stage('Run Migrations') {
             steps {
-                sh 'python manage.py migrate'
+                script {
+                    bat 'venv\\Scripts\\python manage.py migrate' // For Windows
+                }
             }
         }
-
         stage('Run Tests') {
             steps {
-                sh 'python manage.py test'
+                script {
+                    bat 'venv\\Scripts\\python manage.py test' // Modify if necessary
+                }
             }
         }
-
-        stage('Static Files Collection') {
-            steps {
-                sh 'python manage.py collectstatic --noinput'
-            }
-        }
-
         stage('Docker Build and Deploy') {
             steps {
                 script {
-                    if (isUnix()) {
-                        sh '''
-                            docker build -t multivendor_ecommerce .
-                            docker-compose up -d
-                        '''
-                    } else {
-                        bat '''
-                            docker build -t multivendor_ecommerce .
-                            docker-compose up -d
-                        '''
-                    }
+                    bat 'docker build -t myapp .'
+                    bat 'docker run -d -p 8000:8000 myapp'
                 }
             }
         }
     }
-
     post {
         always {
-            echo 'Cleaning up...'
-            sh 'deactivate'
-        }
-        success {
-            echo 'Pipeline executed successfully!'
+            script {
+                // Windows alternative commands, if cleanup scripts are required
+                bat 'echo Cleaning up...'
+            }
         }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline failed'
         }
     }
 }
