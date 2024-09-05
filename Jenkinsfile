@@ -2,77 +2,68 @@ pipeline {
     agent any
 
     environment {
-        // Define environment variables here, if needed
-        PYTHON_ENV = 'venv' // virtual environment name
+        PYTHON_VERSION = '3.9' // Set the Python version you want to use
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from the Git repository
-                checkout scm
+                git branch: 'backend', url: 'https://github.com/stshpaul1996/multivendor_ecommerce.git'
             }
         }
 
         stage('Setup Python Environment') {
             steps {
                 script {
-                    // Set up virtual environment and install dependencies
-                    sh '''
-                    python3 -m venv ${PYTHON_ENV}
-                    source ${PYTHON_ENV}/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
-                    '''
+                    if (isUnix()) {
+                        sh '''
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            pip install -r requirements.txt
+                        '''
+                    } else {
+                        bat '''
+                            python -m venv venv
+                            venv\\Scripts\\activate
+                            pip install -r requirements.txt
+                        '''
+                    }
                 }
             }
         }
 
         stage('Run Migrations') {
             steps {
-                script {
-                    // Run database migrations
-                    sh '''
-                    source ${PYTHON_ENV}/bin/activate
-                    python manage.py migrate
-                    '''
-                }
+                sh 'python manage.py migrate'
             }
         }
 
         stage('Run Tests') {
             steps {
-                script {
-                    // Run unit tests
-                    sh '''
-                    source ${PYTHON_ENV}/bin/activate
-                    python manage.py test
-                    '''
-                }
+                sh 'python manage.py test'
             }
         }
 
         stage('Static Files Collection') {
             steps {
-                script {
-                    // Collect static files
-                    sh '''
-                    source ${PYTHON_ENV}/bin/activate
-                    python manage.py collectstatic --noinput
-                    '''
-                }
+                sh 'python manage.py collectstatic --noinput'
             }
         }
 
         stage('Docker Build and Deploy') {
             steps {
                 script {
-                    // Build and deploy using Docker
-                    sh '''
-                    docker build -t multivendor_ecommerce:latest .
-                    docker-compose down
-                    docker-compose up -d
-                    '''
+                    if (isUnix()) {
+                        sh '''
+                            docker build -t multivendor_ecommerce .
+                            docker-compose up -d
+                        '''
+                    } else {
+                        bat '''
+                            docker build -t multivendor_ecommerce .
+                            docker-compose up -d
+                        '''
+                    }
                 }
             }
         }
@@ -80,19 +71,12 @@ pipeline {
 
     post {
         always {
-            // Clean up virtual environment
-            script {
-                sh '''
-                deactivate || true
-                rm -rf ${PYTHON_ENV}
-                '''
-            }
+            echo 'Cleaning up...'
+            sh 'deactivate'
         }
-
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Pipeline executed successfully!'
         }
-
         failure {
             echo 'Pipeline failed!'
         }
