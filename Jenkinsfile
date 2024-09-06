@@ -6,33 +6,33 @@ pipeline {
                 git branch: 'backend', url: 'https://github.com/stshpaul1996/multivendor_ecommerce.git'
             }
         }
-        stage('Setup Python Environment') {
-            steps {
-                script {
-                    sh 'python3 -m venv venv'  // Create virtual environment
-                    sh 'source venv/bin/activate'  // Activate virtual environment
-                }
-            }
-        }
+        // stage('Setup Python Environment') {
+        //     steps {
+        //         script {
+        //             sh 'python3 -m venv venv'  // Create virtual environment
+        //             sh 'source venv/bin/activate'  // Activate virtual environment
+        //         }
+        //     }
+        // }
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'source venv/bin/activate && pip install --upgrade setuptools'  // Upgrade setuptools
-                    sh 'source venv/bin/activate && pip install -r requirements.txt'  // Install dependencies
+                    // sh 'source pip install --upgrade setuptools'  // Upgrade setuptools
+                    sh ' pip install -r requirements.txt'  // Install dependencies
                 }
             }
         }
         stage('Run Migrations') {
             steps {
                 script {
-                    sh 'source venv/bin/activate && python manage.py migrate'  // Apply migrations
+                    sh ' python manage.py migrate'  // Apply migrations
                 }
             }
         }
         stage('Run Tests') {
             steps {
                 script {
-                    sh 'source venv/bin/activate && python manage.py test'  // Run tests
+                    sh ' python manage.py test'  // Run tests
                 }
             }
         }
