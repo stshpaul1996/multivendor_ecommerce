@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$multivendor-434806/myapp', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$multivendor-434806/myapp']
+images:
+- 'gcr.io/$multivendor-434806/myapp'
