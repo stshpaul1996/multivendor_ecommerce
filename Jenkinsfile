@@ -20,7 +20,7 @@ pipeline {
                     // Activate the virtual environment and install dependencies
                     sh '''
                         # Activate virtual environment and install dependencies
-                        // . venv/bin/activate
+                        
                         pip install --upgrade setuptools
                         pip install -r requirements.txt
                     '''
@@ -32,7 +32,7 @@ pipeline {
                 script {
                     // Apply migrations using the activated virtual environment
                     sh '''
-                        // . venv/bin/activate
+                       
                         python manage.py migrate
                     '''
                 }
@@ -43,7 +43,7 @@ pipeline {
                 script {
                     // Run tests using the activated virtual environment
                     sh '''
-                        // . venv/bin/activate
+                       
                         python manage.py test
                     '''
                 }
